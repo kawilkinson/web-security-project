@@ -31,7 +31,11 @@ func VerifySignedDownload(signingKey [32]byte, fileID int64, expiresValue, signa
 	if err != nil {
 		return false
 	}
-	return subtle.ConstantTimeCompare([]byte(signature), []byte(expectedSignature)) == 1
+	givenSignature, err := hex.DecodeString(signature)
+	if err != nil {
+		return false
+	}
+	return subtle.ConstantTimeCompare(givenSignature, expectedSignature) == 1
 }
 
 func signDownload(signingKey [32]byte, fileID, expires int64) string {
